@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  metabase:
+    container_name: metabase
+    image: metabase/metabase:latest
+    links:
+      - db
+    ports:
+      - "3000:3000"
