@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_16_104049) do
+ActiveRecord::Schema.define(version: 2018_12_16_114157) do
 
   create_table "items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "type_id", null: false
@@ -54,6 +54,15 @@ ActiveRecord::Schema.define(version: 2018_12_16_104049) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "unlikes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "item_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_unlikes_on_item_id"
+    t.index ["user_id"], name: "index_unlikes_on_user_id"
+  end
+
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "uid", null: false
     t.integer "gender", default: 0, null: false
@@ -77,6 +86,8 @@ ActiveRecord::Schema.define(version: 2018_12_16_104049) do
   add_foreign_key "items", "types"
   add_foreign_key "orders", "items"
   add_foreign_key "orders", "users"
+  add_foreign_key "unlikes", "items"
+  add_foreign_key "unlikes", "users"
   add_foreign_key "users", "prefectures"
   add_foreign_key "users", "prefectures", column: "origin_prefecture_id"
   add_foreign_key "users", "regions"

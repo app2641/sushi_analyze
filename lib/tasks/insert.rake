@@ -168,5 +168,46 @@ namespace :insert do
 
   task orders: :environment do
     return unless Order.all.empty?
+
+    File.open(Rails.root.join('db', 'data', 'sushi3b.5000.10.order'), 'r') do |file|
+      file.each_with_index do |raw, i|
+        user_id = i + 1
+        records = []
+        data = raw.split(/\s/)
+
+        data.each_with_index do |item, i2|
+          next if i2 == 0 || i2 == 1
+
+          rank = i2 - 1
+          item_id = item.to_i + 1
+
+          records << Order.new(user_id: user_id, item_id: item_id, rank: rank)
+        end
+        Order.bulk_import!(records)
+      end
+    end
+  end
+
+  task unlikes: :environment do
+    return unless Unlike.all.empty?
+
+    File.open(Rails.root.join('db', 'data', 'sushi3b.5000.10.score'), 'r') do |file|
+      records = []
+
+      file.each_with_index do |raw, i|
+        user_id = i + 1
+        data = raw.split(/\s/)
+
+        data.each_with_index do |val, i2|
+          next unless val.to_i.zero?
+
+          item_id = i2 + 1
+
+          records << Unlike.new(user_id: user_id, item_id: item_id)
+        end
+      end
+
+      Unlike.bulk_import!(records)
+    end
   end
 end
