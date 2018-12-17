@@ -1,9 +1,22 @@
 version: '3.3'
 
 services:
+  db:
+    image: mysql:latest
+    command:
+      - --innodb_file_per_table
+      - --innodb_file_format=Barracuda
+      - --innodb_large_prefix
+      - --character-set-server=utf8mb4
+    ports:
+     - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
   metabase:
     container_name: metabase
     image: metabase/metabase:latest
+    depends_on:
+      - db
     links:
       - db
     ports:
